@@ -1,15 +1,21 @@
 import React, { useReducer, useState } from "react";
 import "./style.css";
 
-const intialState = {
-  id: Date.now(),
-  name: "M Naeem",
-  gmail: "mnaeem@gmail.com",
-};
+const intialState = [
+  {
+    id: Date.now(),
+    name: "M Naeem",
+    mail: "mnaeem@gmail.com",
+  },
+];
 
 function reducer(state, action) {
-  if (action.type === "add") {
+  if (action.type == "add") {
     return [...state, action.payload];
+  } else if (action.type == "delete") {
+    return state.filter((contact) => {
+      return contact.id !== action.payload.id;
+    });
   }
 }
 
@@ -17,6 +23,8 @@ const List = () => {
   const [name, setName] = useState("");
   const [mail, setMail] = useState("");
   const [state, dispatch] = useReducer(reducer, intialState);
+
+  console.log(state);
 
   function addContact(e) {
     e.preventDefault();
@@ -29,7 +37,7 @@ const List = () => {
     };
     dispatch({
       type: "add",
-      payload: { contact },
+      payload: contact,
     });
   }
   return (
@@ -59,18 +67,23 @@ const List = () => {
         <button onClick={addContact}>Add</button>
       </form>
       {/* List Output */}
-      <div className="outPut">
+      <div className="list">
         <ul>
-          {state.map(contact => {
+          {state.map((contact) => {
             return (
-              <>
-                <li key={contact.id}>
-                  <h2>{contact.name}</h2>
-                </li>
-                <li key={contact.id}>
-                  <h2>{contact.mail}</h2>
-                </li>
-              </>
+              <li key={contact.id}>
+                <h2>{contact.name}</h2>
+                <h2>{contact.mail}</h2>
+                <div>
+                  <button
+                    onClick={() => {
+                      dispatch({ type: "delete", payload: { id: contact.id } });
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
             );
           })}
         </ul>
@@ -80,3 +93,4 @@ const List = () => {
 };
 
 export default List;
+
