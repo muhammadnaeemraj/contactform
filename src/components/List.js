@@ -7,7 +7,11 @@ const intialState = {
   gmail: "mnaeem@gmail.com",
 };
 
-function reducer() {}
+function reducer(state, action) {
+  if (action.type === "add") {
+    return [...state, action.payload];
+  }
+}
 
 const List = () => {
   const [name, setName] = useState("");
@@ -18,6 +22,15 @@ const List = () => {
     e.preventDefault();
     setName(" ");
     setMail(" ");
+    const contact = {
+      name,
+      mail,
+      id: Date.now(),
+    };
+    dispatch({
+      type: "add",
+      payload: { contact },
+    });
   }
   return (
     <>
@@ -48,14 +61,14 @@ const List = () => {
       {/* List Output */}
       <div className="outPut">
         <ul>
-          {state.map((contact) => {
+          {state.map(contact => {
             return (
               <>
                 <li key={contact.id}>
                   <h2>{contact.name}</h2>
                 </li>
                 <li key={contact.id}>
-                  <h2>{contact.name}</h2>
+                  <h2>{contact.mail}</h2>
                 </li>
               </>
             );
